@@ -284,10 +284,10 @@ var generator = new DefaultIDGenerator(options);
 
 | Threads | Throughput | Avg Latency | Note |
 |---------|-----------|-------------|------|
-| 1       | 12-15M IDs/sec | 0.067-0.083 ��s | Single thread, no contention |
-| 2       | 9-12M IDs/sec | 0.167-0.222 ��s | Light contention |
-| 4       | 7-9M IDs/sec | 0.444-0.571 ��s | Medium contention |
-| 8       | 6-8M IDs/sec | 1.000-1.333 ��s | Heavy contention |
+| 1       | 12-15M IDs/sec | 0.067-0.083 μs | Single thread, no contention |
+| 2       | 9-12M IDs/sec | 0.167-0.222 μs | Light contention |
+| 4       | 7-9M IDs/sec | 0.444-0.571 μs | Medium contention |
+| 8       | 6-8M IDs/sec | 1.000-1.333 μs | Heavy contention |
 
 ### Distributed Performance (Method 3)
 
@@ -324,7 +324,7 @@ var generator = new DefaultIDGenerator(options);
 > - System load
 >
 > The above data are reference values from typical test environments. 
-> Real deployment environments may have ��30% variations.
+> Real deployment environments may have ±30% variations.
 > We recommend running benchmarks on actual hardware for accurate data.
 
 ## ID Structure
@@ -332,9 +332,9 @@ var generator = new DefaultIDGenerator(options);
 ### Standard 64-bit Snowflake ID
 
 ```
-�������������������������������������Щ��������������������������Щ��������������������������Щ�����������������������������
-�� Timestamp(41bit)�� DC ID (5bit)�� Worker(5bit)�� Sequence(12) ��
-�������������������������������������ة��������������������������ة��������������������������ة�����������������������������
+┌─────────────────┬─────────────┬─────────────┬──────────────┐
+│ Timestamp(41bit)│ DC ID (5bit)│ Worker(5bit)│ Sequence(12) │
+└─────────────────┴─────────────┴─────────────┴──────────────┘
   ~69 years        32 DCs        32 Workers   4096/ms
 ```
 
@@ -342,14 +342,14 @@ var generator = new DefaultIDGenerator(options);
 
 | Config | Worker Bits | DC Bits | Seq Bits | Capacity |
 |--------|------------|---------|----------|----------|
-| Standard | 5 | 5 | 12 | 32 DC �� 32 Worker �� 4096/ms |
-| Multi-DC | 4 | 6 | 12 | 64 DC �� 16 Worker �� 4096/ms |
-| Multi-Worker | 6 | 4 | 12 | 16 DC �� 64 Worker �� 4096/ms |
-| Low Concurrency | 5 | 5 | 10 | 32 DC �� 32 Worker �� 1024/ms |
+| Standard | 5 | 5 | 12 | 32 DC × 32 Worker × 4096/ms |
+| Multi-DC | 4 | 6 | 12 | 64 DC × 16 Worker × 4096/ms |
+| Multi-Worker | 6 | 4 | 12 | 16 DC × 64 Worker × 4096/ms |
+| Low Concurrency | 5 | 5 | 10 | 32 DC × 32 Worker × 1024/ms |
 
 **Constraints**:
-- Worker bits + DC bits + Seq bits �� 22
-- Seq bits �� 12
+- Worker bits + DC bits + Seq bits ≤ 22
+- Seq bits ≤ 12
 
 ## FAQ
 
@@ -412,6 +412,6 @@ MIT License
 
 ## Contact Us
 
-- **Website**: https://jordium.com
-- **Documentation**: https://docs.jordium.com
-- **Issues**: https://gitee.com/jordium/jordium_framework_net/issues
+- **Repo**: https://github.com/nelson820125/Jordium.Snowflake.NET
+- **Documentation**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/blob/master/README-EN.md
+- **Issues**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/issues

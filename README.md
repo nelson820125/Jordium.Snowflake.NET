@@ -411,6 +411,6 @@ MIT License
 
 ## 联系我们
 
-- **官网**: https://jordium.com
-- **文档**: https://docs.jordium.com
-- **问题反馈**: https://gitee.com/jordium/jordium_framework_net/issues
+- **仓库**: https://gitee.com/nelson820125/Jordium.Snowflake.NET
+- **文档**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/blob/master/README.md
+- **问题反馈**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/issues
