@@ -12,7 +12,7 @@ High-performance distributed ID generator based on Twitter's Snowflake algorithm
 
 - ✅ **Globally Unique**: Supports multi-datacenter, multi-machine deployment
 - 📈 **Trend Increasing**: IDs increase by timestamp, optimized for database indexing
-- ⚡ **High Performance**: 2 million - 20 million IDs/second per machine
+- ⚡ **High Performance**: 2 million - 20 million IDs/second per machine (actual results may vary depending on test environment)
 - 🔧 **Multiple Implementations**: Drift algorithm, Traditional algorithm, Lock-free algorithm
 - ⏰ **Clock Rollback Handling**: Automatic handling of system time rollback
 - 🎯 **Flexible Configuration**: Customizable bit allocation
