@@ -8,12 +8,12 @@
     
     <!-- NuGet Package Properties -->
     <PackageId>Jordium.Snowflake.NET</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Jordium.com</Authors>
     <Company>Jordium Dalian, China</Company>
     <Product>Jordium.Snowflake.NET</Product>
     <Description>A high-performance Snowflake ID generator supporting multiple algorithms (drift, traditional, lock-free) for distributed systems.</Description>
-    <PackageTags>snowflake;id-generator;distributed;unique-id;雪花算法</PackageTags>
+    <PackageTags>snowflake;id-generator;distributed;unique-id</PackageTags>
     <PackageProjectUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -27,10 +27,17 @@
     
     <!-- Optional: Generate package on build -->
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    
+    <!-- NuGet Package Output Path -->
+    <PackageOutputPath>$(MSBuildProjectDirectory)\nupkg</PackageOutputPath>
   </PropertyGroup>
-
+	
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="/" Condition="Exists('README.md')" />
+   <!-- Main README file (English version, displayed on NuGet.org) -->
+	<None Include="..\..\README-EN.md" Pack="true" PackagePath="/README.md" />
+    
+    <!-- Chinese version README -->
+    <None Include="..\..\README.md" Pack="true" PackagePath="/README.zh-CN.md" />
   </ItemGroup>
 
 </Project>

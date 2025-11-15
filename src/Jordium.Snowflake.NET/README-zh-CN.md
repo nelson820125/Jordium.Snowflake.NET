@@ -1,6 +1,6 @@
 ﻿# Jordium.Snowflake.NET
 
-[English](./README-EN.md) | 简体中文
+[English](./README.md) | 简体中文
 
 [![NuGet](https://img.shields.io/nuget/v/Jordium.Snowflake.NET.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
