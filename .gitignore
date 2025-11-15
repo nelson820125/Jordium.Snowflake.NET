@@ -13,3 +13,6 @@ src/Jordium.Snowflake.NET.Test/obj/
 src/Jordium.Snowflake.NET/bin/
 src/Jordium.Snowflake.NET/obj/
 src/Jordium.Snowflake.NET/nupkg/
+assets/images/dark-blue.png
+assets/images/light-blue.png
+assets/images/multiple.png
