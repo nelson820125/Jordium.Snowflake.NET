@@ -1,0 +1,15 @@
+.vs/
+Jordium.Snowflake.NET.Console/bin/
+Jordium.Snowflake.NET.Console/obj/
+Jordium.Snowflake.NET.Test/bin/
+Jordium.Snowflake.NET.Test/obj/
+Jordium.Snowflake.NET/bin/
+Jordium.Snowflake.NET/nupkg/
+Jordium.Snowflake.NET/obj/
+src/Jordium.Snowflake.NET.Console/bin/
+src/Jordium.Snowflake.NET.Console/obj/
+src/Jordium.Snowflake.NET.Test/bin/
+src/Jordium.Snowflake.NET.Test/obj/
+src/Jordium.Snowflake.NET/bin/
+src/Jordium.Snowflake.NET/obj/
+src/Jordium.Snowflake.NET/nupkg/
