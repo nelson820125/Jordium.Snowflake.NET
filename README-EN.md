@@ -1,5 +1,9 @@
 # Jordium.Snowflake.NET
 
+<p align="center">
+  <img src="assets/images/trans.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
+</p>
+
 English | [简体中文](./README.md)
 
 [![NuGet](https://img.shields.io/nuget/v/Jordium.Snowflake.NET.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
