@@ -1,9 +1,5 @@
 ﻿# Jordium.Snowflake.NET
 
-<p align="center">
-  <img src="assets/images/trans.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
-</p>
-
 [English](./README-EN.md) | 简体中文
 
 [![NuGet](https://img.shields.io/nuget/v/Jordium.Snowflake.NET.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
@@ -411,10 +407,10 @@ var options = new IDGeneratorOptions
 
 ## 许可证
 
-MIT License
+MIT License @ 2025 JORDIUM.COM
 
 ## 联系我们
 
 - **仓库**: https://gitee.com/nelson820125/Jordium.Snowflake.NET
-- **文档**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/blob/master/README.md
-- **问题反馈**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/issues
+- **文档**: https://github.com/nelson820125/Jordium.Snowflake.NET/blob/master/README-EN.md
+- **问题反馈**: https://github.com/nelson820125/Jordium.Snowflake.NET/issues

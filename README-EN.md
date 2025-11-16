@@ -1,9 +1,5 @@
 # Jordium.Snowflake.NET
 
-<p align="center">
-  <img src="assets/images/trans.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
-</p>
-
 English | [简体中文](./README.md)
 
 [![NuGet](https://img.shields.io/nuget/v/Jordium.Snowflake.NET.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
@@ -412,10 +408,10 @@ Ensure each machine has a unique `WorkerId` and `DataCenterId` combination:
 
 ## License
 
-MIT License
+MIT License @ 2025 JORDIUM.COM
 
 ## Contact Us
 
 - **Repo**: https://github.com/nelson820125/Jordium.Snowflake.NET
-- **Documentation**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/blob/master/README-EN.md
-- **Issues**: https://gitee.com/nelson820125/Jordium.Snowflake.NET/issues
+- **Documentation**: https://github.com/nelson820125/Jordium.Snowflake.NET/blob/master/README-EN.md
+- **Issues**: https://github.com/nelson820125/Jordium.Snowflake.NET/issues
