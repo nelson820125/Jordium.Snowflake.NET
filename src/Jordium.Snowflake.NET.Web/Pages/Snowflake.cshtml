@@ -1,0 +1,305 @@
+@page
+@model Jordium.Snowflake.NET.Web.Pages.SnowflakeModel
+@{
+    ViewData["Title"] = "Snowflake ID Generator";
+}
+
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --info: #06b6d4;
+        --light: #f8fafc;
+        --dark: #1e293b;
+        --border: #e2e8f0;
+    }
+
+    .sf-container { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; }
+    .sf-header { margin-bottom: 3rem; text-align: center; }
+    .sf-title { font-size: 2.5rem; font-weight: 700; color: var(--dark); margin: 0; }
+    .sf-subtitle { font-size: 1rem; color: var(--secondary); margin-top: 0.5rem; }
+    
+    .sf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .sf-card { background: white; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; transition: box-shadow 0.2s; }
+    .sf-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .sf-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 1.1rem; color: var(--dark); }
+    .sf-card-body { padding: 1.5rem; }
+    
+    .sf-stat { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--light); }
+    .sf-stat:last-child { border-bottom: none; }
+    .sf-stat-label { color: var(--secondary); font-size: 0.9rem; }
+    .sf-stat-value { font-weight: 600; color: var(--dark); }
+    
+    .sf-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; font-weight: 500; }
+    .sf-badge-primary { background: #dbeafe; color: var(--primary); }
+    .sf-badge-info { background: #cffafe; color: var(--info); }
+    .sf-badge-secondary { background: #f1f5f9; color: var(--secondary); }
+    
+    .sf-btn { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
+    .sf-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .sf-btn-primary { background: var(--primary); color: white; }
+    .sf-btn-primary:hover { background: var(--primary-dark); }
+    .sf-btn-success { background: var(--success); color: white; }
+    .sf-btn-success:hover { background: #059669; }
+    .sf-btn-warning { background: var(--warning); color: white; }
+    .sf-btn-warning:hover { background: #d97706; }
+    
+    .sf-input { padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; width: 100%; }
+    .sf-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    
+    .sf-input-group { display: flex; gap: 0.5rem; }
+    .sf-input-group .sf-input { flex: 1; }
+    
+    .sf-id-list { max-height: 400px; overflow-y: auto; background: var(--light); border-radius: 6px; padding: 1rem; }
+    .sf-id-item { background: white; padding: 1rem; margin-bottom: 0.75rem; border-radius: 6px; border: 1px solid var(--border); font-family: 'Courier New', monospace; font-size: 0.9rem; }
+    .sf-id-item:last-child { margin-bottom: 0; }
+    .sf-id-value { color: var(--dark); font-weight: 600; word-break: break-all; }
+    .sf-id-time { color: var(--secondary); font-size: 0.85rem; margin-top: 0.5rem; }
+    
+    .sf-alert { padding: 1rem 1.25rem; border-radius: 6px; margin-top: 1rem; }
+    .sf-alert-info { background: #e0f2fe; border: 1px solid #7dd3fc; color: #0c4a6e; }
+    .sf-alert-danger { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+    
+    .sf-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+    .sf-stat-card { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .sf-stat-label-sm { color: var(--secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .sf-stat-value-lg { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    
+    .sf-empty { text-align: center; color: var(--secondary); padding: 2rem; }
+</style>
+
+<div class="sf-container">
+    <div class="sf-header">
+        <h1 class="sf-title">?? Snowflake ID Generator</h1>
+        <p class="sf-subtitle">High-performance distributed unique ID generation system</p>
+    </div>
+
+    <div class="sf-grid">
+        <!-- Configuration Panel -->
+        <div class="sf-card">
+            <div class="sf-card-header">?? Configuration</div>
+            <div class="sf-card-body">
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Worker ID</span>
+                    <span class="sf-badge sf-badge-primary">@Model.Config.WorkerId</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Data Center ID</span>
+                    <span class="sf-badge sf-badge-primary">@Model.Config.DataCenterId</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Method</span>
+                    <span class="sf-badge sf-badge-secondary">@Model.Config.Method</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Base Time</span>
+                    <span class="sf-stat-value">@Model.Config.BaseTime.ToString("yyyy-MM-dd HH:mm")</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Sequence Bits</span>
+                    <span class="sf-stat-value">@Model.Config.SeqBitLength</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Worker ID Bits</span>
+                    <span class="sf-stat-value">@Model.Config.WorkerIdBitLength</span>
+                </div>
+                <div class="sf-stat">
+                    <span class="sf-stat-label">Data Center Bits</span>
+                    <span class="sf-stat-value">@Model.Config.DataCenterIdBitLength</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ID Generator Panel -->
+        <div class="sf-card">
+            <div class="sf-card-header">? Generate IDs</div>
+            <div class="sf-card-body">
+                <button type="button" class="sf-btn sf-btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="generateSingleId()">
+                    Generate Single ID
+                </button>
+                <div class="sf-input-group" style="margin-bottom: 1rem;">
+                    <input type="number" id="batchCount" class="sf-input" value="10" min="1" max="100" placeholder="Batch count">
+                    <button class="sf-btn sf-btn-success" type="button" onclick="generateBatchIds()">
+                        Generate Batch
+                    </button>
+                </div>
+                
+                <div id="generatedIds" class="sf-id-list">
+                    @if (Model.GeneratedIds.Count > 0)
+                    {
+                        foreach (var id in Model.GeneratedIds)
+                        {
+                            var idInfo = Model.ParseId(id);
+                            <div class="sf-id-item">
+                                <div class="sf-id-value">@id</div>
+                                <div class="sf-id-time" data-utc-time="@idInfo.Timestamp.ToString("o")"></div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="sf-empty">No IDs generated yet</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ID Parser -->
+    <div class="sf-card" style="margin-bottom: 1.5rem;">
+        <div class="sf-card-header">?? Parse Snowflake ID</div>
+        <div class="sf-card-body">
+            <div class="sf-input-group">
+                <input type="text" id="idToParse" class="sf-input" placeholder="Enter Snowflake ID to parse">
+                <button type="button" class="sf-btn sf-btn-warning" onclick="parseId()">Parse</button>
+            </div>
+            <div id="parseResult"></div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="sf-stats-grid">
+        <div class="sf-stat-card">
+            <div class="sf-stat-label-sm">Total Generated</div>
+            <div class="sf-stat-value-lg" id="totalCount">@Model.GeneratedIds.Count</div>
+        </div>
+        <div class="sf-stat-card">
+            <div class="sf-stat-label-sm">Worker ID</div>
+            <div class="sf-stat-value-lg" style="color: var(--info);">@Model.Config.WorkerId</div>
+        </div>
+        <div class="sf-stat-card">
+            <div class="sf-stat-label-sm">Data Center ID</div>
+            <div class="sf-stat-value-lg" style="color: var(--info);">@Model.Config.DataCenterId</div>
+        </div>
+        <div class="sf-stat-card">
+            <div class="sf-stat-label-sm">Method</div>
+            <div class="sf-stat-value-lg" style="color: var(--secondary); font-size: 1.5rem;">@Model.Config.Method</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => convertAllUtcTimes());
+
+        function formatLocalTime(utcTimeString) {
+            const date = new Date(utcTimeString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                fractionalSecondDigits: 3
+            }).replace(/\//g, '-');
+        }
+
+        function convertAllUtcTimes() {
+            document.querySelectorAll('[data-utc-time]').forEach(el => {
+                const utcTime = el.getAttribute('data-utc-time');
+                if (utcTime) el.textContent = formatLocalTime(utcTime);
+            });
+        }
+
+        async function generateSingleId() {
+            try {
+                const response = await fetch('/api/snowflake/generate');
+                const data = await response.json();
+                addIdToList(data.idString || data.id.toString(), data.timestamp);
+                updateTotalCount();
+            } catch (error) {
+                showError('Error generating ID: ' + error.message);
+            }
+        }
+
+        async function generateBatchIds() {
+            try {
+                const count = document.getElementById('batchCount').value;
+                const response = await fetch(`/api/snowflake/generate/batch?count=${count}`);
+                const data = await response.json();
+                
+                const items = data.idObjs || data.ids || [];
+                for (const item of items) {
+                    if (item.id || item.idString) {
+                        addIdToList(item.id || item.idString, item.timestamp);
+                    } else {
+                        const parseResponse = await fetch(`/api/snowflake/parse/${item}`);
+                        const parseData = await parseResponse.json();
+                        addIdToList(item, parseData.timestamp);
+                    }
+                }
+                updateTotalCount();
+            } catch (error) {
+                showError('Error generating batch IDs: ' + error.message);
+            }
+        }
+
+        function addIdToList(id, timestamp) {
+            const container = document.getElementById('generatedIds');
+            const empty = container.querySelector('.sf-empty');
+            if (empty) empty.remove();
+            
+            const div = document.createElement('div');
+            div.className = 'sf-id-item';
+            div.innerHTML = `
+                <div class="sf-id-value">${id}</div>
+                <div class="sf-id-time">${formatLocalTime(timestamp)}</div>
+            `;
+            container.insertBefore(div, container.firstChild);
+        }
+
+        async function parseId() {
+            try {
+                const id = document.getElementById('idToParse').value.trim();
+                if (!id) {
+                    showError('Please enter an ID to parse');
+                    return;
+                }
+                
+                const response = await fetch(`/api/snowflake/parse/${id}`);
+                const data = await response.json();
+                
+                document.getElementById('parseResult').innerHTML = `
+                    <div class="sf-alert sf-alert-info">
+                        <strong>?? Parsed Information</strong>
+                        <div style="margin-top: 0.75rem; line-height: 1.8;">
+                            <div><strong>ID:</strong> ${data.idString || data.id}</div>
+                            <div><strong>Timestamp:</strong> ${formatLocalTime(data.timestamp)}</div>
+                            <div><strong>Worker ID:</strong> ${data.workerId}</div>
+                            <div><strong>Data Center ID:</strong> ${data.dataCenterId}</div>
+                            <div><strong>Sequence:</strong> ${data.sequence}</div>
+                            <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #bae6fd;">
+                                <small>Seq: ${data.seqBitLength}bit | Worker: ${data.workerIdBitLength}bit | DC: ${data.dataCenterIdBitLength}bit</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('parseResult').innerHTML = `
+                    <div class="sf-alert sf-alert-danger">
+                        <strong>? Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function updateTotalCount() {
+            const count = document.querySelectorAll('#generatedIds .sf-id-item').length;
+            document.getElementById('totalCount').textContent = count;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('generatedIds');
+            const div = document.createElement('div');
+            div.className = 'sf-alert sf-alert-danger';
+            div.textContent = message;
+            container.insertBefore(div, container.firstChild);
+            setTimeout(() => div.remove(), 3000);
+        }
+    </script>
+}

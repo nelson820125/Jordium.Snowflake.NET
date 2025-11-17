@@ -1,30 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0;netstandard2.0</TargetFrameworks>
+    <!-- 支持 .NET Framework 4.6+, .NET 6-10, .NET Standard 2.0+ -->
+    <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.1;netstandard2.0;net48;net472;net461</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
+    <!-- 使用 C# 9.0 确保所有框架兼容 -->
+    <LangVersion>9.0</LangVersion>
     
     <!-- NuGet Package Properties -->
     <PackageId>Jordium.Snowflake.NET</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.2.0</Version>
     <Authors>Jordium.com</Authors>
     <Company>Jordium Dalian, China</Company>
     <Product>Jordium.Snowflake.NET</Product>
-    <Description>A high-performance Snowflake ID generator supporting multiple algorithms (drift, traditional, lock-free) for distributed systems.</Description>
-    <PackageTags>snowflake;id-generator;distributed;unique-id</PackageTags>
+    <Description>A high-performance Snowflake ID generator supporting multiple algorithms (drift, traditional, lock-free) for distributed systems. Supports .NET Framework 4.6.1-4.8, .NET 6-10, .NET Standard 2.0+, and .NET Standard 2.1.</Description>
+    <PackageTags>snowflake;id-generator;distributed;unique-id;netframework;net461;net472;net48;netstandard;net6;net7;net8;net9;net10</PackageTags>
     <PackageProjectUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-	<!-- Release 模式打包 -->
-	<Configuration>Release</Configuration>
+    <!-- Release 模式打包 -->
+    <Configuration>Release</Configuration>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Copyright>MIT License © 2025 Jordium.com</Copyright>
-    <PackageReleaseNotes>Initial release with support for .NET 8.0, .NET 6.0, and .NET Standard 2.0</PackageReleaseNotes>
-	<!-- 包图标 -->
-	<PackageIcon>trans-min.png</PackageIcon>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright © 2025 Jordium.com</Copyright>
+    <PackageReleaseNotes>v1.2.0: Added explicit support for .NET Framework 4.6.1-4.8, .NET 9 and .NET 10 - Now supports .NET Framework 4.6.1-4.8, .NET 6-10, .NET Standard 2.0+</PackageReleaseNotes>
+    <!-- 包图标 -->
+    <PackageIcon>trans-min.png</PackageIcon>
     
     <!-- Optional: Generate documentation XML -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -33,16 +35,83 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     
     <!-- NuGet Package Output Path -->
-    <PackageOutputPath>$(MSBuildProjectDirectory)\nupkg</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildProjectDirectory)\nupkg</PackageOutputPath>	
   </PropertyGroup>
 
-	<ItemGroup>
-		<!-- Main README file (English version, displayed on NuGet.org) -->
-		<None Include="..\..\README-EN.md" Pack="true" PackagePath="/README.md" />
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<!-- 不在主 DLL 中嵌入调试符号 -->
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+		<Optimize>true</Optimize>
 
-		<!-- Chinese version README -->
-		<None Include="..\..\README.md" Pack="true" PackagePath="/README.zh-CN.md" />
-		<None Include="assets\images\trans-min.png" Pack="true" PackagePath="" />
-	</ItemGroup>
+		<!-- 如果需要符号包，单独生成 .snupkg -->
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <!-- Main README file (English version, displayed on NuGet.org) -->
+	<None Include="README.md" Pack="true" PackagePath="" />
+	<None Include="LICENSE.md" Pack="true" PackagePath="" />
+
+    <!-- Chinese version README -->
+    <None Include="assets\images\trans-min.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET Standard 2.0 and .NET Framework 4.6.1-4.8 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET Standard 2.1 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET 6 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET 7 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET 8 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET 9 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- Dependencies for .NET 10 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0-*" />
+  </ItemGroup>
 
 </Project>

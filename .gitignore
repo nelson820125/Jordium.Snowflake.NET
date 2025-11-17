@@ -16,3 +16,5 @@ src/Jordium.Snowflake.NET/nupkg/
 assets/images/dark-blue.png
 assets/images/light-blue.png
 assets/images/multiple.png
+src/Jordium.Snowflake.NET.Web/bin/
+src/Jordium.Snowflake.NET.Web/obj/

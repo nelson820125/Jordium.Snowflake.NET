@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET.Conso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET", "Jordium.Snowflake.NET\Jordium.Snowflake.NET.csproj", "{F4264AE5-424A-D0AC-31DA-CC279BB9579E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET.Web", "Jordium.Snowflake.NET.Web\Jordium.Snowflake.NET.Web.csproj", "{202D2C81-EA3F-F16F-B9AC-FFE444A33676}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F4264AE5-424A-D0AC-31DA-CC279BB9579E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4264AE5-424A-D0AC-31DA-CC279BB9579E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4264AE5-424A-D0AC-31DA-CC279BB9579E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202D2C81-EA3F-F16F-B9AC-FFE444A33676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202D2C81-EA3F-F16F-B9AC-FFE444A33676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202D2C81-EA3F-F16F-B9AC-FFE444A33676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202D2C81-EA3F-F16F-B9AC-FFE444A33676}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

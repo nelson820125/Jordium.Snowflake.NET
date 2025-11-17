@@ -1,7 +1,7 @@
 # Jordium.Snowflake.NET
 
 <p align="center">
-  <img src="assets/images/trans.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
+  <img src="https://iili.io/fJBcoPV.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
 </p>
 
 English | [简体中文](./README.md)
@@ -21,6 +21,31 @@ High-performance distributed ID generator based on Twitter's Snowflake algorithm
 - ⏰ **Clock Rollback Handling**: Automatic handling of system time rollback
 - 🎯 **Flexible Configuration**: Customizable bit allocation
 
+## ID Structure
+
+### Standard 64-bit Snowflake ID
+
+```
+┌─────────────────┬─────────────┬─────────────┬──────────────┐
+│ Timestamp(41bit)│ DC ID (5bit)│ Worker(5bit)│ Sequence(12) │
+└─────────────────┴─────────────┴─────────────┴──────────────┘
+  ~69 years        32 DCs        32 Workers   4096/ms
+```
+
+### Bit Allocation Examples
+
+| Config          | Worker Bits | DC Bits | Seq Bits | Capacity                    |
+| --------------- | ----------- | ------- | -------- | --------------------------- |
+| Standard        | 5           | 5       | 12       | 32 DC × 32 Worker × 4096/ms |
+| Multi-DC        | 4           | 6       | 12       | 64 DC × 16 Worker × 4096/ms |
+| Multi-Worker    | 6           | 4       | 12       | 16 DC × 64 Worker × 4096/ms |
+| Low Concurrency | 5           | 5       | 10       | 32 DC × 32 Worker × 1024/ms |
+
+**Constraints**:
+
+- Worker bits + DC bits + Seq bits ≤ 22
+- Seq bits ≤ 12
+
 ## Installation
 
 ### NuGet CLI
@@ -38,79 +63,71 @@ dotnet add package Jordium.Snowflake.NET
 ### PackageReference
 
 ```xml
-<PackageReference Include="Jordium.Snowflake.NET" Version="1.0.0" />
+<PackageReference Include="Jordium.Snowflake.NET" Version="1.2.0" />
 ```
 
-## Quick Start
+## Getting Started (v1.2.0)
 
-### Basic Usage
+### Client Application
+
+#### 1. Import Namespace
 
 ```csharp
-using Jordium.Framework.Snowflake;
+using Jordium.Snowflake.NET;
+```
 
-// Create ID generator
-var options = new IDGeneratorOptions
+#### 2. Create Instance Using Factory Pattern
+
+```csharp
+// Method 1: Create instance using WorkerId and DataCenterId
+var generator1 = JordiumSnowflakeIDGeneratorFactory.Create(workerId: 1, dataCenterId: 1);
+System.Console.WriteLine($"Generator 1 (WorkerId=1, DataCenterId=1): {generator1.NewLong()}");
+```
+
+```csharp
+// Method 2: Create instance using IDGeneratorOption object
+var options = new IDGeneratorOptions(workerId: 2, dataCenterId: 1)
 {
-    WorkerId = 1,        // Worker ID (0-31)
-    DataCenterId = 1,    // Datacenter ID (0-31)
-    Method = 1           // Algorithm version (1=Drift, 2=Traditional, 3=Lock-free)
+    Method = 1
 };
-
-var generator = new DefaultIDGenerator(options);
-
-// Generate ID
-long id = generator.NewLong();
-Console.WriteLine($"Generated ID: {id}");
+var generator2 = JordiumSnowflakeIDGeneratorFactory.Create(options);
+System.Console.WriteLine($"Generator 2 (WorkerId=2, DataCenterId=1): {generator2.NewLong()}");
 ```
 
-### Advanced Configuration
-
 ```csharp
-var options = new IDGeneratorOptions
+// Method 3: Create instance using configuration delegate
+var generator3 = JordiumSnowflakeIDGeneratorFactory.Create(opt =>
 {
-    WorkerId = 1,
-    DataCenterId = 1,
-    Method = 1,
-    
-    // Custom bit allocation
-    WorkerIdBitLength = 5,      // Worker ID bits (default 5)
-    DataCenterIdBitLength = 5,  // Datacenter ID bits (default 5)
-    SeqBitLength = 12,          // Sequence bits (default 12)
-    
-    // Base time (for timestamp calculation)
-    BaseTime = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-    
-    // Sequence range
-    MinSeqNumber = 0,
-    MaxSeqNumber = 4095,  // 2^12 - 1
-    
-    // Drift algorithm specific: max drift count
-    TopOverCostCount = 2000
-};
-
-var generator = new DefaultIDGenerator(options);
+    opt.WorkerId = 3;
+    opt.DataCenterId = 1;
+    opt.Method = 1;
+    opt.BaseTime = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+});
+System.Console.WriteLine($"Generator 3 (WorkerId=3, DataCenterId=1): {generator3.NewLong()}");
 ```
 
-### ASP.NET Core Dependency Injection
+### ASP.NET Core Dependency Injection (v1.2.0+ Easier Registration, More Standard ASP.NET Core Approach)
+
+#### 1. Import Namespace
 
 ```csharp
-// Program.cs or Startup.cs
+using Jordium.Snowflake.NET.Extensions;
+```
+
+#### 2. Register Jordium.Snowflake.NET Service
+
+```csharp
+// Program.cs OR Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    // Register as singleton
-    services.AddSingleton<IIDGenerator>(sp =>
-    {
-        var options = new IDGeneratorOptions
-        {
-            WorkerId = 1,
-            DataCenterId = 1,
-            Method = 1
-        };
-        return new DefaultIDGenerator(options);
+    // use code-based configuration
+    services.AddJordiumSnowflakeIdGenerator(options => {
+        options.WorkerId = 1;
+        options.DataCenterId = 1;
     });
 }
 
-// Use in Controller
+// Controller
 public class OrderController : ControllerBase
 {
     private readonly IIDGenerator _idGenerator;
@@ -124,38 +141,109 @@ public class OrderController : ControllerBase
     public IActionResult CreateOrder()
     {
         long orderId = _idGenerator.NewLong();
-        // Use generated ID
+        // ID Generated
         return Ok(new { OrderId = orderId });
     }
 }
 ```
 
-## Algorithm Comparison
+#### 3. Supports 3 Registration Methods
 
-### Three Implementation Methods
+```csharp
+// Method 1: Read default "JordiumSnowflakeConfig" configuration from appsettings.json
+services.AddJordiumSnowflakeIdGenerator();
 
-| Algorithm | Implementation | Use Case | Performance | Clock Rollback | Recommended |
-|-----------|---------------|----------|-------------|----------------|-------------|
-| **Method 1** | SnowflakeWorkerV1 | Monolith app, high concurrency | ⭐⭐⭐⭐ | ✅ Special sequence | ⭐⭐⭐⭐⭐ |
-| **Method 2** | SnowflakeWorkerV2 | General, standard implementation | ⭐⭐⭐⭐ | ❌ Throws exception | ⭐⭐⭐ |
-| **Method 3** | SnowflakeWorkerV3 | Distributed cluster, microservices | ⭐⭐⭐⭐⭐ | ⚠️ Large rollback throws | ⭐⭐⭐⭐ |
+// Configuration in appsettings.json:
+"JordiumSnowflakeConfig": {
+  "DataCenterId": 1,
+  "WorkerId": 2,
+  "Method": 1,
+  "WorkerIdBitLength": 5,
+  "DataCenterIdBitLength": 5,
+  "SequenceBitLength": 12
+}
+```
+
+```csharp
+// Method 2: Use custom configuration section "MyCustomSnowflakeConfigSection"
+services.AddJordiumSnowflakeIdGenerator(_configuration, "MyCustomSnowflakeConfigSection");
+
+// Configuration in appsettings.json:
+"MyCustomSnowflakeConfigSection": {
+  "DataCenterId": 1,
+  "WorkerId": 2,
+  "Method": 1,
+  "WorkerIdBitLength": 5,
+  "DataCenterIdBitLength": 5,
+  "SequenceBitLength": 12
+}
+```
+
+```csharp
+// Method 3: Code-based configuration
+services.AddJordiumSnowflakeIdGenerator(options => {
+    options.WorkerId = 1;
+    options.DataCenterId = 1;
+    ...other properties
+});
+```
+
+## IDGeneratorOptions Property Description
+
+| Property Name             | Type     | Description                                                                                                                        | Default Value                                         |
+| ------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Method**                | short    | Calculation method (1-Drift algorithm, 2-Traditional algorithm, 3-Lock-free algorithm)                                             | 1                                                     |
+| **BaseTime**              | DateTime | Start time (UTC format), cannot exceed current system time                                                                         | DateTime(2020, 2, 20, 2, 20, 2, 20, DateTimeKind.Utc) |
+| **WorkerId**              | ushort   | Machine code                                                                                                                       | 0                                                     |
+| **DataCenterId**          | ushort   | Data center identifier                                                                                                             | 0                                                     |
+| **WorkerIdBitLength**     | byte     | Machine code bit length. Recommended range: 1-5 (requirement: sequence bits + data identifier + machine code bits ≤ 22).           | 5                                                     |
+| **DataCenterIdBitLength** | byte     | Data center identifier bit length. Recommended range: 1-5 (requirement: sequence bits + data identifier + machine code bits ≤ 22). | 5                                                     |
+| **SeqBitLength**          | byte     | Sequence bit length. Recommended range: 1-12 (requirement: sequence bits + machine code bits ≤ 22) 4096.                           | 12                                                    |
+| **MaxSeqNumber**          | int      | Maximum sequence number (inclusive). (Maximum value calculated by SeqBitLength)                                                    | 0                                                     |
+| **MinSeqNumber**          | int      | Minimum sequence number (inclusive). Default 0, not less than 0, not greater than MaxSeqNumber                                     | 0                                                     |
+| **TopOverCostCount**      | int      | Maximum drift count (inclusive). Default 2000, recommended range 500-10000 (related to computing power)                            | 2000                                                  |
+
+## Supported Target Frameworks
+
+- .NET Framework (>= 4.6.1)
+- .NET 6
+- .NET 7
+- .NET 8
+- .NET 9
+- .NET 10
+- .NET Standard (>= 2.0)
+
+## Built-in Algorithm Comparison (see source code provided in the open-source library)
+
+> The code blocks mentioned in this section are for unit testing, directly instantiated and demonstrated based on the underlying code, not using dependency injection or factory pattern instances.
+
+### Three Algorithms
+
+| Algorithm    | Implementation    | Use Case                           | Performance | Clock Rollback           | Recommended |
+| ------------ | ----------------- | ---------------------------------- | ----------- | ------------------------ | ----------- |
+| **Method 1** | SnowflakeWorkerV1 | Monolith app, high concurrency     | ⭐⭐⭐⭐    | ✅ Special sequence      | ⭐⭐⭐⭐⭐  |
+| **Method 2** | SnowflakeWorkerV2 | General, standard implementation   | ⭐⭐⭐⭐    | ❌ Throws exception      | ⭐⭐⭐      |
+| **Method 3** | SnowflakeWorkerV3 | Distributed cluster, microservices | ⭐⭐⭐⭐⭐  | ⚠️ Large rollback throws | ⭐⭐⭐⭐    |
 
 ### Detailed Description
 
 #### Method 1 - Drift Algorithm (Recommended)
 
 **Features**:
+
 - ✅ Auto-handles clock rollback (uses reserved sequence 1-4)
 - ✅ Auto "drift" to future time when sequence overflows
 - ✅ Complete event callback mechanism
 - 🔒 Uses `lock` for synchronization
 
 **Use Cases**:
+
 - Monolithic applications (multiple threads competing for same WorkerId)
 - Business sensitive to clock rollback
 - Systems requiring ID generation monitoring
 
 **Configuration Example**:
+
 ```csharp
 var options = new IDGeneratorOptions
 {
@@ -182,17 +270,20 @@ generator.GenIdActionAsync = arg =>
 #### Method 2 - Traditional Algorithm
 
 **Features**:
+
 - ✅ Standard Snowflake implementation
 - ✅ Simple logic, easy to understand
 - ❌ Throws exception on clock rollback
 - 🔒 Uses `lock` for synchronization
 
 **Use Cases**:
+
 - Learning and understanding Snowflake algorithm
 - Stable environment with rare clock rollback
 - Simple scenarios without complex features
 
 **Configuration Example**:
+
 ```csharp
 var options = new IDGeneratorOptions
 {
@@ -219,6 +310,7 @@ catch (Exception ex)
 #### Method 3 - Lock-Free Algorithm (High Performance)
 
 **Features**:
+
 - ✅ CAS lock-free concurrency, highest performance
 - ✅ Timestamp cached in state, reduces system calls
 - ✅ Significant performance advantage in distributed scenarios
@@ -226,12 +318,14 @@ catch (Exception ex)
 - ⚠️ Large rollback (> 1000ms) throws exception
 
 **Use Cases**:
+
 - Microservice clusters (each service has independent WorkerId)
 - Kubernetes deployment (each Pod has independent WorkerId)
 - High-concurrency distributed systems
 - Scenarios pursuing extreme performance
 
 **Configuration Example**:
+
 ```csharp
 var options = new IDGeneratorOptions
 {
@@ -254,11 +348,11 @@ var generator = new DefaultIDGenerator(options);
 
 #### Single WorkerId Contention (8 threads)
 
-| Algorithm | Throughput | Note |
-|-----------|-----------|------|
-| Method 1 | 6-8M IDs/sec | Lock performs stable under single-machine contention |
-| Method 2 | 5-7M IDs/sec | Standard implementation, medium performance |
-| Method 3 | 4-6M IDs/sec | CAS conflict causes performance degradation |
+| Algorithm | Throughput   | Note                                                 |
+| --------- | ------------ | ---------------------------------------------------- |
+| Method 1  | 6-8M IDs/sec | Lock performs stable under single-machine contention |
+| Method 2  | 5-7M IDs/sec | Standard implementation, medium performance          |
+| Method 3  | 4-6M IDs/sec | CAS conflict causes performance degradation          |
 
 **Conclusion**: For single WorkerId high concurrency, recommend **Method 1**
 
@@ -266,11 +360,11 @@ var generator = new DefaultIDGenerator(options);
 
 #### Multi WorkerId Independent Scenario (8 WorkerIds)
 
-| Algorithm | Throughput | Note |
-|-----------|-----------|------|
-| Method 1 | 8-12M IDs/sec | Lock has fixed overhead |
-| Method 2 | 7-11M IDs/sec | Standard implementation |
-| Method 3 | **12-18M IDs/sec** | Lock-free advantage is significant ? |
+| Algorithm | Throughput         | Note                                 |
+| --------- | ------------------ | ------------------------------------ |
+| Method 1  | 8-12M IDs/sec      | Lock has fixed overhead              |
+| Method 2  | 7-11M IDs/sec      | Standard implementation              |
+| Method 3  | **12-18M IDs/sec** | Lock-free advantage is significant ? |
 
 **Conclusion**: For multi-WorkerId distributed scenarios, recommend **Method 3**
 
@@ -286,29 +380,29 @@ var generator = new DefaultIDGenerator(options);
 
 ### Single Machine Performance (Method 1)
 
-| Threads | Throughput | Avg Latency | Note |
-|---------|-----------|-------------|------|
+| Threads | Throughput     | Avg Latency    | Note                         |
+| ------- | -------------- | -------------- | ---------------------------- |
 | 1       | 12-15M IDs/sec | 0.067-0.083 μs | Single thread, no contention |
-| 2       | 9-12M IDs/sec | 0.167-0.222 μs | Light contention |
-| 4       | 7-9M IDs/sec | 0.444-0.571 μs | Medium contention |
-| 8       | 6-8M IDs/sec | 1.000-1.333 μs | Heavy contention |
+| 2       | 9-12M IDs/sec  | 0.167-0.222 μs | Light contention             |
+| 4       | 7-9M IDs/sec   | 0.444-0.571 μs | Medium contention            |
+| 8       | 6-8M IDs/sec   | 1.000-1.333 μs | Heavy contention             |
 
 ### Distributed Performance (Method 3)
 
 | WorkerIds | Count Each | Total Throughput | Performance Gain |
-|-----------|-----------|-----------------|------------------|
-| 2         | 50,000    | 10-13M IDs/sec | +10-15% |
-| 4         | 25,000    | 12-15M IDs/sec | +35-45% |
-| 8         | 12,500    | 14-18M IDs/sec | +50-60% |
+| --------- | ---------- | ---------------- | ---------------- |
+| 2         | 50,000     | 10-13M IDs/sec   | +10-15%          |
+| 4         | 25,000     | 12-15M IDs/sec   | +35-45%          |
+| 8         | 12,500     | 14-18M IDs/sec   | +50-60%          |
 
 ### Correctness Tests
 
-| Test Item | Count | Duplicates | Result |
-|-----------|-------|-----------|--------|
-| Single WorkerId Concurrent | 1M | 0 | ✅ Pass |
-| Multi WorkerId Concurrent | 1M | 0 | ✅ Pass |
-| Extreme Concurrency (32 threads) | 3.2M | 0 | ✅ Pass |
-| Sustained Pressure (5 sec) | 10M+ | 0 | ✅ Pass |
+| Test Item                        | Count | Duplicates | Result  |
+| -------------------------------- | ----- | ---------- | ------- |
+| Single WorkerId Concurrent       | 1M    | 0          | ✅ Pass |
+| Multi WorkerId Concurrent        | 1M    | 0          | ✅ Pass |
+| Extreme Concurrency (32 threads) | 3.2M  | 0          | ✅ Pass |
+| Sustained Pressure (5 sec)       | 10M+  | 0          | ✅ Pass |
 
 ### Stability Tests
 
@@ -320,6 +414,7 @@ var generator = new DefaultIDGenerator(options);
 ### Performance Notes
 
 > **Note**: Actual performance depends on multiple factors:
+>
 > - CPU model and frequency
 > - Memory speed
 > - OS scheduling
@@ -327,39 +422,16 @@ var generator = new DefaultIDGenerator(options);
 > - Debug/Release mode
 > - System load
 >
-> The above data are reference values from typical test environments. 
+> The above data are reference values from typical test environments.
 > Real deployment environments may have ±30% variations.
 > We recommend running benchmarks on actual hardware for accurate data.
-
-## ID Structure
-
-### Standard 64-bit Snowflake ID
-
-```
-┌─────────────────┬─────────────┬─────────────┬──────────────┐
-│ Timestamp(41bit)│ DC ID (5bit)│ Worker(5bit)│ Sequence(12) │
-└─────────────────┴─────────────┴─────────────┴──────────────┘
-  ~69 years        32 DCs        32 Workers   4096/ms
-```
-
-### Bit Allocation Examples
-
-| Config | Worker Bits | DC Bits | Seq Bits | Capacity |
-|--------|------------|---------|----------|----------|
-| Standard | 5 | 5 | 12 | 32 DC × 32 Worker × 4096/ms |
-| Multi-DC | 4 | 6 | 12 | 64 DC × 16 Worker × 4096/ms |
-| Multi-Worker | 6 | 4 | 12 | 16 DC × 64 Worker × 4096/ms |
-| Low Concurrency | 5 | 5 | 10 | 32 DC × 32 Worker × 1024/ms |
-
-**Constraints**:
-- Worker bits + DC bits + Seq bits ≤ 22
-- Seq bits ≤ 12
 
 ## FAQ
 
 ### 1. How to Choose WorkerId?
 
 **Recommended Approaches**:
+
 - Monolithic app: Fixed value (e.g., 1)
 - Microservices: Hash service name and modulo
 - K8s: Use Pod ordinal (StatefulSet)
@@ -378,11 +450,11 @@ var options = new IDGeneratorOptions
 
 ### 2. How to Handle Clock Rollback?
 
-| Algorithm | Handling |
-|-----------|----------|
-| Method 1 | Uses reserved sequence 1-4, supports up to 4 rollbacks |
-| Method 2 | Throws exception directly |
-| Method 3 | Short time (< 1s) sleeps and waits, long time throws exception |
+| Algorithm | Handling                                                       |
+| --------- | -------------------------------------------------------------- |
+| Method 1  | Uses reserved sequence 1-4, supports up to 4 rollbacks         |
+| Method 2  | Throws exception directly                                      |
+| Method 3  | Short time (< 1s) sleeps and waits, long time throws exception |
 
 ### 3. How to Ensure Distributed Uniqueness?
 
@@ -402,6 +474,7 @@ Ensure each machine has a unique `WorkerId` and `DataCenterId` combination:
 ### 4. What if Performance is Below Expectations?
 
 **Checklist**:
+
 - ✅ Use singleton pattern (`AddSingleton`)
 - ✅ Avoid frequent creation of `DefaultIDGenerator` instances
 - ✅ Choose Method 1 for single-machine high concurrency
