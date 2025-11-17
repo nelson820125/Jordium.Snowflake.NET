@@ -106,6 +106,25 @@ var generator3 = JordiumSnowflakeIDGeneratorFactory.Create(opt =>
 System.Console.WriteLine($"Generator 3 (WorkerId=3, DataCenterId=1): {generator3.NewLong()}");
 ```
 
+#### 3. 利用单例模型初始化全局实例
+
+```csharp
+// Check if default instance is initialized
+if (!JordiumSnowflakeIDGeneratorFactory.IsDefaultInitialized)
+{
+    System.Console.WriteLine("Default instance not initialized. Initializing now...");
+
+    // Initialize the default singleton instance
+    JordiumSnowflakeIDGeneratorFactory.InitializeDefault(workerId: 10, dataCenterId: 2);
+    System.Console.WriteLine("> Default instance initialized successfully!");
+}
+
+// Use the default instance anywhere in your application
+long id1 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+long id2 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+long id3 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+```
+
 ### ASP.NET Core 依赖注入（v1.2.0+ 更方便的注册方式，更遵循 ASP.NET Core 标准）
 
 #### 1. 引入命名空间

@@ -106,6 +106,25 @@ var generator3 = JordiumSnowflakeIDGeneratorFactory.Create(opt =>
 System.Console.WriteLine($"Generator 3 (WorkerId=3, DataCenterId=1): {generator3.NewLong()}");
 ```
 
+#### 3. Singleton Pattern - Use global default instance
+
+```csharp
+// Check if default instance is initialized
+if (!JordiumSnowflakeIDGeneratorFactory.IsDefaultInitialized)
+{
+    System.Console.WriteLine("Default instance not initialized. Initializing now...");
+
+    // Initialize the default singleton instance
+    JordiumSnowflakeIDGeneratorFactory.InitializeDefault(workerId: 10, dataCenterId: 2);
+    System.Console.WriteLine("> Default instance initialized successfully!");
+}
+
+// Use the default instance anywhere in your application
+long id1 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+long id2 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+long id3 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
+```
+
 ### ASP.NET Core Dependency Injection (v1.2.0+ Easier Registration, More Standard ASP.NET Core Approach)
 
 #### 1. Import Namespace

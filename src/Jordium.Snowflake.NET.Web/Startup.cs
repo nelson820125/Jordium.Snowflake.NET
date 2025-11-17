@@ -36,7 +36,8 @@ namespace Jordium.Snowflake.NET.Web
             services.AddJordiumSnowflakeIdGenerator(_configuration, "MyCustomSnowflakeConfigSection");
 
             // Case3: use code-based configuration
-            //services.AddJordiumSnowflakeIdGenerator(options => { 
+            //services.AddJordiumSnowflakeIdGenerator(options =>
+            //{
             //    options.WorkerId = 1;
             //    options.DataCenterId = 1;
             //});

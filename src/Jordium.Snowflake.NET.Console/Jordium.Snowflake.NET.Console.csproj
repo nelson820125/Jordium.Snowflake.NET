@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Jordium.Snowflake.NET" Version="1.2.0" />
+  </ItemGroup>
+
 </Project>
