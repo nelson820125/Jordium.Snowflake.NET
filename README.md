@@ -1,7 +1,7 @@
 ﻿# Jordium.Snowflake.NET
 
 <p align="center">
-  <img src="https://iili.io/fJBcoPV.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
+  <img src="./assets/images/trans-min.png" alt="Jordium.Snowflake.NET Logo" width="200"/>
 </p>
 
 [English](./README-EN.md) | 简体中文
