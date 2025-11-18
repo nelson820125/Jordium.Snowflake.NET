@@ -7,8 +7,11 @@
 [English](./README-EN.md) | 简体中文
 
 [![NuGet](https://img.shields.io/nuget/v/Jordium.Snowflake.NET.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
-[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Jordium.Snowflake.Net.svg)](https://www.nuget.org/packages/Jordium.Snowflake.NET/)
+[![.NET Framework](https://img.shields.io/badge/.NET%20Framework-%3E%3D4.6.1-red)](https://dotnet.microsoft.com/en-us/download/dotnet-framework)
+[![.NET](https://img.shields.io/badge/.NET-%3E%3D6.0-red)](https://dotnet.microsoft.com/en-us/download)
+[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-%3E%3D2.0-red)](https://learn.microsoft.com/en-us/dotnet/standard/net-standard)
+[![License](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
 
 高性能分布式 ID 生成器，基于 Twitter Snowflake 算法的 .NET 实现。支持三种实现方式，适用于不同的应用场景。
 
