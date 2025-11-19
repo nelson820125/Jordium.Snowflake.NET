@@ -1,53 +1,87 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- 支持 .NET Framework 4.6+, .NET 6-10, .NET Standard 2.0+ -->
-    <TargetFrameworks>net10.0;net9.0;net8.0;net7.0;net6.0;netstandard2.1;netstandard2.0;net48;net472;net461</TargetFrameworks>
-    <ImplicitUsings>disable</ImplicitUsings>
+    <!-- Support for .NET Framework 4.6+, .NET 6-10, .NET Standard 2.0+ -->
+    <TargetFrameworks>net10.0;net9.0;net8.0;net6.0;netstandard2.1;netstandard2.0;net48;net472;net461</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <!-- 使用 C# 9.0 确保所有框架兼容 -->
     <LangVersion>9.0</LangVersion>
     
     <!-- NuGet Package Properties -->
     <PackageId>Jordium.Snowflake.NET</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.2</Version>
     <Authors>Jordium.com</Authors>
     <Company>Jordium Dalian, China</Company>
     <Product>Jordium.Snowflake.NET</Product>
     <Description>A high-performance Snowflake ID generator supporting multiple algorithms (drift, traditional, lock-free) for distributed systems. Supports .NET Framework 4.6.1-4.8, .NET 6-10, .NET Standard 2.0+, and .NET Standard 2.1.</Description>
     <PackageTags>snowflake;id-generator;distributed;unique-id;netframework;net461;net472;net48;netstandard;net6;net7;net8;net9;net10</PackageTags>
     <PackageProjectUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/nelson820125/Jordium.Snowflake.NET</RepositoryUrl>
+    <RepositoryUrl>https://github.com/nelson820125/Jordium.Snowflake.NET.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <!-- Release 模式打包 -->
-    <Configuration>Release</Configuration>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
     <Copyright>Copyright © 2025 Jordium.com</Copyright>
-    <PackageReleaseNotes>v1.2.0: Added explicit support for .NET Framework 4.6.1-4.8, .NET 9 and .NET 10 - Now supports .NET Framework 4.6.1-4.8, .NET 6-10, .NET Standard 2.0+</PackageReleaseNotes>
-    <!-- 包图标 -->
+    <PackageReleaseNotes>v1.2.2: set Deterministic</PackageReleaseNotes>
+    <!-- package icon -->
     <PackageIcon>trans-min.png</PackageIcon>
     
     <!-- Optional: Generate documentation XML -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     
-    <!-- Optional: Generate package on build -->
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    
     <!-- NuGet Package Output Path -->
-    <PackageOutputPath>$(MSBuildProjectDirectory)\nupkg</PackageOutputPath>	
+    <PackageOutputPath>$(MSBuildProjectDirectory)\nupkg</PackageOutputPath>	  
+	
+	<!-- Generate *.snupkg -->
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<EmbedUntrackedSources>true</EmbedUntrackedSources>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<Deterministic>true</Deterministic>
+	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+	<EnablePackageValidation>true</EnablePackageValidation>
+	<PackageValidationBaselineVersion>1.2.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
-		<!-- 不在主 DLL 中嵌入调试符号 -->
-		<DebugType>none</DebugType>
-		<DebugSymbols>false</DebugSymbols>
-		<Optimize>true</Optimize>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
 
-		<!-- 如果需要符号包，单独生成 .snupkg -->
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
   <ItemGroup>
     <!-- Main README file (English version, displayed on NuGet.org) -->

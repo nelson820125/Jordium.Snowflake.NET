@@ -18,3 +18,6 @@ assets/images/light-blue.png
 assets/images/multiple.png
 src/Jordium.Snowflake.NET.Web/bin/
 src/Jordium.Snowflake.NET.Web/obj/
+src/Jordium.Snowflake.NET.Console472/bin/
+src/Jordium.Snowflake.NET.Console472/obj/
+src/packages/

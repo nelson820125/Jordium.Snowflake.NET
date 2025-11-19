@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Jordium.Snowflake.NET.Web.Pages.SnowflakeModel
 @{
     ViewData["Title"] = "Snowflake ID Generator";
@@ -74,14 +74,14 @@
 
 <div class="sf-container">
     <div class="sf-header">
-        <h1 class="sf-title">?? Snowflake ID Generator</h1>
+        <h1 class="sf-title">🚀 Snowflake ID Generator</h1>
         <p class="sf-subtitle">High-performance distributed unique ID generation system</p>
     </div>
 
     <div class="sf-grid">
         <!-- Configuration Panel -->
         <div class="sf-card">
-            <div class="sf-card-header">?? Configuration</div>
+            <div class="sf-card-header">🛠️ Configuration</div>
             <div class="sf-card-body">
                 <div class="sf-stat">
                     <span class="sf-stat-label">Worker ID</span>
@@ -116,7 +116,7 @@
 
         <!-- ID Generator Panel -->
         <div class="sf-card">
-            <div class="sf-card-header">? Generate IDs</div>
+            <div class="sf-card-header">🕹️ Generate IDs</div>
             <div class="sf-card-body">
                 <button type="button" class="sf-btn sf-btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="generateSingleId()">
                     Generate Single ID
@@ -151,7 +151,7 @@
 
     <!-- ID Parser -->
     <div class="sf-card" style="margin-bottom: 1.5rem;">
-        <div class="sf-card-header">?? Parse Snowflake ID</div>
+        <div class="sf-card-header">🔍 Parse Snowflake ID</div>
         <div class="sf-card-body">
             <div class="sf-input-group">
                 <input type="text" id="idToParse" class="sf-input" placeholder="Enter Snowflake ID to parse">
@@ -266,7 +266,7 @@
                 
                 document.getElementById('parseResult').innerHTML = `
                     <div class="sf-alert sf-alert-info">
-                        <strong>?? Parsed Information</strong>
+                        <strong>✅ Parsed Information</strong>
                         <div style="margin-top: 0.75rem; line-height: 1.8;">
                             <div><strong>ID:</strong> ${data.idString || data.id}</div>
                             <div><strong>Timestamp:</strong> ${formatLocalTime(data.timestamp)}</div>
@@ -282,7 +282,7 @@
             } catch (error) {
                 document.getElementById('parseResult').innerHTML = `
                     <div class="sf-alert sf-alert-danger">
-                        <strong>? Error:</strong> ${error.message}
+                        <strong>❌ Error:</strong> ${error.message}
                     </div>
                 `;
             }
