@@ -63,7 +63,7 @@ namespace Jordium.Snowflake.NET.Extensions
                 throw new ArgumentException("Section name cannot be null or whitespace.", nameof(sectionName));
 
             var section = configuration.GetSection(sectionName);
-            
+
             // Check if section exists
             if (section.Exists())
             {

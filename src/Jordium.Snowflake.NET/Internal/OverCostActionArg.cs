@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Jordium.Snowflake.NET
+﻿namespace Jordium.Snowflake.NET
 {
     /// <summary>
     /// Id生成时回调参数

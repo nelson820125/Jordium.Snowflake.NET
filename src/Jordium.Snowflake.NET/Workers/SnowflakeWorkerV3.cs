@@ -32,34 +32,34 @@ namespace Jordium.Snowflake.NET
 
         public SnowflakeWorkerV3(IDGeneratorOptions options)
         {
-            BaseTime = options.BaseTime != DateTime.MinValue 
-                ? options.BaseTime 
+            BaseTime = options.BaseTime != DateTime.MinValue
+                ? options.BaseTime
                 : new DateTime(2020, 2, 20, 2, 20, 2, 20, DateTimeKind.Utc);
 
-            WorkerId = options.WorkerId >= 0 
-                ? options.WorkerId 
+            WorkerId = options.WorkerId >= 0
+                ? options.WorkerId
                 : (ushort)DateTime.Now.Millisecond;
 
-            DataCenterId = options.DataCenterId >= 0 
-                ? options.DataCenterId 
+            DataCenterId = options.DataCenterId >= 0
+                ? options.DataCenterId
                 : (ushort)DateTime.Now.Millisecond;
 
-            WorkerIdBitLength = options.WorkerIdBitLength > 0 
-                ? options.WorkerIdBitLength 
+            WorkerIdBitLength = options.WorkerIdBitLength > 0
+                ? options.WorkerIdBitLength
                 : (byte)5;
 
-            DataCenterIdBitLength = options.DataCenterIdBitLength > 0 
-                ? options.DataCenterIdBitLength 
+            DataCenterIdBitLength = options.DataCenterIdBitLength > 0
+                ? options.DataCenterIdBitLength
                 : (byte)5;
 
-            SeqBitLength = options.SeqBitLength > 0 
-                ? options.SeqBitLength 
+            SeqBitLength = options.SeqBitLength > 0
+                ? options.SeqBitLength
                 : (byte)12;
 
             MinSeqNumber = options.MinSeqNumber;
 
-            MaxSeqNumber = options.MaxSeqNumber > 0 
-                ? options.MaxSeqNumber 
+            MaxSeqNumber = options.MaxSeqNumber > 0
+                ? options.MaxSeqNumber
                 : (int)Math.Pow(2, SeqBitLength) - 1;
 
             _TimestampShift = (byte)(DataCenterIdBitLength + WorkerIdBitLength + SeqBitLength);
@@ -110,12 +110,12 @@ namespace Jordium.Snowflake.NET
             if (timestamp < lastTimestamp)
             {
                 long timeDiff = lastTimestamp - timestamp;
-                
+
                 if (timeDiff > 1000)
                 {
                     throw new Exception($"Clock moved backwards. Refusing to generate id for {timeDiff} milliseconds");
                 }
-                
+
                 Thread.Sleep((int)timeDiff + 1);
                 timestamp = GetCurrentTimeTick();
             }

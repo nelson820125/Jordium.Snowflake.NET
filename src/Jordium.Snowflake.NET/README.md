@@ -124,6 +124,76 @@ long id2 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
 long id3 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
 ```
 
+### Attribute-based Usage (v1.3.0+ Simplified Usage with [SnowflakeID])
+
+Starting from v1.3.0, you can mark entity properties with `[SnowflakeID]` and have them filled in automatically via a single call, without changing any of the existing usage patterns above.
+
+#### 1. Import Namespace
+
+```csharp
+using Jordium.Snowflake.NET;
+```
+
+#### 2. Mark Properties
+
+```csharp
+public class Order
+{
+    [SnowflakeID]
+    public long Id { get; set; }
+
+    [SnowflakeID]
+    public string TraceCode { get; set; } = string.Empty;
+
+    public decimal Amount { get; set; }
+}
+```
+
+Supported property types: `long`, `long?`, `string` (the generated numeric ID is converted via `ToString()`).
+
+#### 3. Populate Values
+
+> **Important**: `[SnowflakeID]` is only metadata. Population does **not** happen automatically on object construction — you must call `Populate` / `GenerateSnowflakeIds()` explicitly, exactly once per instance.
+
+```csharp
+// Option A: Use the global Default singleton instance
+JordiumSnowflakeIDGeneratorFactory.InitializeDefault(workerId: 1, dataCenterId: 1);
+
+var order = new Order { Amount = 99.9m };
+order.GenerateSnowflakeIds();   // extension method, uses Default internally
+Console.WriteLine(order.Id);
+```
+
+```csharp
+// Option B: Use an explicit IIDGenerator instance (recommended for DI scenarios)
+public class OrderService
+{
+    private readonly IIDGenerator _idGenerator;
+
+    public OrderService(IIDGenerator idGenerator) => _idGenerator = idGenerator;
+
+    public Order CreateOrder()
+    {
+        var order = new Order { Amount = 100 };
+        SnowflakeIdPopulator.Populate(order, _idGenerator);
+        return order;
+    }
+}
+```
+
+```csharp
+// Option C: Batch population
+var orders = GetPendingOrders();
+SnowflakeIdPopulator.PopulateMany(orders, _idGenerator);
+```
+
+#### Behavior Notes
+
+- **Idempotent by default**: a member is only filled when its current value is `0` / `null` / `""`. Pass `[SnowflakeID(OverwriteExisting = true)]` if you need to always regenerate.
+- **Type safety**: applying `[SnowflakeID]` to an unsupported type (e.g. `int`, `Guid`) throws `NotSupportedException` on first use.
+- **Default instance required**: calling `Populate`/`GenerateSnowflakeIds()` without passing a generator requires `JordiumSnowflakeIDGeneratorFactory.Default` to be initialized first, otherwise an `InvalidOperationException` is thrown.
+- **ORM integration**: for automatic population on every insert (e.g. SqlSugar, EF Core), use `SnowflakeIdPopulator.TryPopulateProperty(entity, propertyInfo, generator)` inside the ORM's insert interceptor/callback. See the dedicated ORM extension packages (e.g. `Jordium.Snowflake.NET.SqlSugar`) for ready-made integrations.
+
 ### ASP.NET Core Dependency Injection (v1.2.0+ Easier Registration, More Standard ASP.NET Core Approach)
 
 #### 1. Import Namespace

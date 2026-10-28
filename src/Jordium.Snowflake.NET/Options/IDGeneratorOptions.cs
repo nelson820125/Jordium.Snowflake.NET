@@ -27,6 +27,7 @@ namespace Jordium.Snowflake.NET
         /// 构造函数
         /// </summary>
         /// <param name="workerId"></param>
+        /// <param name="dataCenterId"></param>
         public IDGeneratorOptions(ushort workerId, ushort dataCenterId)
         {
             WorkerId = workerId;

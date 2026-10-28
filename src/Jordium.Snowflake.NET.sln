@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20
+# Visual Studio Version 18
+VisualStudioVersion = 18.11.12324.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.XUnit", "Jordium.Snowflake.NET.Test\Jordium.XUnit.csproj", "{B0996558-09E1-A4F3-EBF6-E5B1B6DCDF1B}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET.Web", "Jordium.Snowflake.NET.Web\Jordium.Snowflake.NET.Web.csproj", "{202D2C81-EA3F-F16F-B9AC-FFE444A33676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET.Console472", "Jordium.Snowflake.NET.Console472\Jordium.Snowflake.NET.Console472.csproj", "{44A24DFE-C0AA-432D-B8BE-9A21EB0E60AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jordium.Snowflake.NET.SqlSugar", "Jordium.Snowflake.NET.SqlSugar\Jordium.Snowflake.NET.SqlSugar.csproj", "{EBB8B7C2-4625-F6F7-51F1-784B3D44DA00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{44A24DFE-C0AA-432D-B8BE-9A21EB0E60AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44A24DFE-C0AA-432D-B8BE-9A21EB0E60AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44A24DFE-C0AA-432D-B8BE-9A21EB0E60AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB8B7C2-4625-F6F7-51F1-784B3D44DA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB8B7C2-4625-F6F7-51F1-784B3D44DA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB8B7C2-4625-F6F7-51F1-784B3D44DA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB8B7C2-4625-F6F7-51F1-784B3D44DA00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

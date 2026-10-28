@@ -131,6 +131,76 @@ long id2 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
 long id3 = JordiumSnowflakeIDGeneratorFactory.Default.NewLong();
 ```
 
+### 基于特性的简化用法（v1.3.0+ 使用 [SnowflakeID] 的极简用法）
+
+从 v1.3.0 开始，可以在实体属性上标注 `[SnowflakeID]`，通过一次调用即可完成赋值，且与上述三种既有使用方式完全兼容、互不影响。
+
+#### 1. 引入命名空间
+
+```csharp
+using Jordium.Snowflake.NET;
+```
+
+#### 2. 标注属性
+
+```csharp
+public class Order
+{
+    [SnowflakeID]
+    public long Id { get; set; }
+
+    [SnowflakeID]
+    public string TraceCode { get; set; } = string.Empty;
+
+    public decimal Amount { get; set; }
+}
+```
+
+支持的属性类型：`long`、`long?`、`string`（数值型 ID 会通过 `ToString()` 转换）。
+
+#### 3. 触发填充
+
+> **注意**：`[SnowflakeID]` 本身只是元数据标记，**不会**在对象构造时自动触发赋值，必须显式调用一次 `Populate` / `GenerateSnowflakeIds()`。
+
+```csharp
+// 方式 A：使用全局 Default 单例实例
+JordiumSnowflakeIDGeneratorFactory.InitializeDefault(workerId: 1, dataCenterId: 1);
+
+var order = new Order { Amount = 99.9m };
+order.GenerateSnowflakeIds();   // 扩展方法，内部使用 Default 实例
+Console.WriteLine(order.Id);
+```
+
+```csharp
+// 方式 B：使用显式注入的 IIDGenerator 实例（推荐在 DI 场景下使用）
+public class OrderService
+{
+    private readonly IIDGenerator _idGenerator;
+
+    public OrderService(IIDGenerator idGenerator) => _idGenerator = idGenerator;
+
+    public Order CreateOrder()
+    {
+        var order = new Order { Amount = 100 };
+        SnowflakeIdPopulator.Populate(order, _idGenerator);
+        return order;
+    }
+}
+```
+
+```csharp
+// 方式 C：批量填充
+var orders = GetPendingOrders();
+SnowflakeIdPopulator.PopulateMany(orders, _idGenerator);
+```
+
+#### 行为说明
+
+- **默认幂等**：仅当当前值为 `0` / `null` / `""` 时才会填充，若需要每次都强制重新生成，可使用 `[SnowflakeID(OverwriteExisting = true)]`。
+- **类型安全**：若将 `[SnowflakeID]` 标注在不支持的类型（如 `int`、`Guid`）上，首次使用时会抛出 `NotSupportedException`。
+- **Default 实例依赖**：不传入 generator 调用 `Populate`/`GenerateSnowflakeIds()` 时，要求 `JordiumSnowflakeIDGeneratorFactory.Default` 已初始化，否则抛出 `InvalidOperationException`。
+- **ORM 集成**：如需在每次 Insert 时自动填充（如 SqlSugar、EF Core），可在 ORM 的插入拦截/回调中调用 `SnowflakeIdPopulator.TryPopulateProperty(entity, propertyInfo, generator)`，具体可参考对应的 ORM 扩展包（如 `Jordium.Snowflake.NET.SqlSugar`）。
+
 ### ASP.NET Core 依赖注入（v1.2.0+ 更方便的注册方式，更遵循 ASP.NET Core 标准）
 
 #### 1. 引入命名空间

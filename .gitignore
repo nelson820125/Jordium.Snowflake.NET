@@ -21,3 +21,6 @@ src/Jordium.Snowflake.NET.Web/obj/
 src/Jordium.Snowflake.NET.Console472/bin/
 src/Jordium.Snowflake.NET.Console472/obj/
 src/packages/
+src/Jordium.Snowflake.NET.SqlSugar/bin/
+src/Jordium.Snowflake.NET.SqlSugar/nupkg/
+src/Jordium.Snowflake.NET.SqlSugar/obj/

@@ -6,6 +6,7 @@
  */
 using Jordium.Snowflake.NET.Extensions;
 using Jordium.Snowflake.NET.Web.Services;
+using Microsoft.OpenApi;
 
 namespace Jordium.Snowflake.NET.Web
 {
@@ -51,12 +52,12 @@ namespace Jordium.Snowflake.NET.Web
                 services.AddEndpointsApiExplorer();
                 services.AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                    options.SwaggerDoc("v1", new OpenApiInfo
                     {
                         Title = "Jordium Snowflake ID Generator API",
                         Version = "v1.3.0",
                         Description = "A high-performance Snowflake ID generator API",
-                        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                        Contact = new OpenApiContact
                         {
                             Name = "Jordium.com",
                             Email = "ning.li@jordium.com"

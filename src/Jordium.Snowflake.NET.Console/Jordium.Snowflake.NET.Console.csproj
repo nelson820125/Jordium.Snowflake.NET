@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jordium.Snowflake.NET" Version="1.2.2" />
+    <PackageReference Include="Jordium.Snowflake.NET" Version="1.3.0" />
   </ItemGroup>
 
 </Project>

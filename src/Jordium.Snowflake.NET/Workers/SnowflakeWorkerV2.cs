@@ -44,9 +44,9 @@ namespace Jordium.Snowflake.NET
                 }
 
                 _LastTimeTick = currentTimeTick;
-                var result = ((currentTimeTick << _TimestampShift) + 
-                    ((long)DataCenterId << (WorkerIdBitLength + SeqBitLength)) + 
-                    ((long)WorkerId << SeqBitLength) + 
+                var result = ((currentTimeTick << _TimestampShift) +
+                    ((long)DataCenterId << (WorkerIdBitLength + SeqBitLength)) +
+                    ((long)WorkerId << SeqBitLength) +
                     (uint)_CurrentSeqNumber);
 
                 return result;
